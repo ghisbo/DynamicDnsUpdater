@@ -1,4 +1,15 @@
-﻿namespace DynamicDnsUpdater
+﻿/*
+ * Based on Dynamic DNS Updater from Nesos
+ * https://github.com/Nesos-ita/DynamicDnsUpdater
+ * 
+ * Modifications:
+ * - Added modifier field to support additional URL parameters (e.g., &myipv4=preserve)
+ * - Extended logging for network interfaces and DNS update requests
+ * - Added debug mode that logs requests without executing them
+ * - Enhanced network interface change detection logging
+ */
+
+namespace DynamicDnsUpdater
 {
     static class AppSettings
     {
@@ -10,9 +21,11 @@
         public static string password = "";
         public static string hostname = "";
         public static string updateLink = "";
+        public static string modifier = "";
         public static uint updateInterval = 1;
         public static logSettingEnum logSetting = logSettingEnum.noLog;
         public static bool checkAlsoLocalIpChange = true;
+        public static bool debugMode = false;
 
         //Settings from cmdLine
         public static bool overrideLogOption = false; //if true, we have log options from cmdline, so we ignore the one from file

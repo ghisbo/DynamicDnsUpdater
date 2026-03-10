@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
+ * Based on Dynamic DNS Updater from Nesos
+ * https://github.com/Nesos-ita/DynamicDnsUpdater
+ * 
+ * Modifications:
+ * - Added modifier field to support additional URL parameters (e.g., &myipv4=preserve)
+ * - Extended logging for network interfaces and DNS update requests
+ * - Added debug mode that logs requests without executing them
+ * - Enhanced network interface change detection logging
+ */
+
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -32,8 +43,8 @@ namespace DynamicDnsUpdater
             updaterThread.Start();
             statusImg.BackColor = ColorTranslator.FromHtml("#5AFF5A"); //green
             statusImg.Checked = true;
-            lblStatus.Text = "DDNS upadater running";
-            utils.AddLog("DDNS upadater running");
+            lblStatus.Text = "DDNS updater running";
+            utils.AddLog("DDNS updater running");
         }
 
         void StopUpdateTask()
@@ -49,8 +60,8 @@ namespace DynamicDnsUpdater
             updaterThread = null;
             statusImg.BackColor = ColorTranslator.FromHtml("#FF5A5A"); //red
             statusImg.Checked = false;
-            lblStatus.Text = "DDNS upadater stopped";
-            utils.AddLog("DDNS upadater stopped");
+            lblStatus.Text = "DDNS updater stopped";
+            utils.AddLog("DDNS updater stopped");
         }
 
         void StatusUpdaterTask()
@@ -96,6 +107,7 @@ namespace DynamicDnsUpdater
                 txtPassword.Enabled = true;
                 txtHostname.Enabled = true;
                 txtUpdateLink.Enabled = true;
+                txtbModifier.Enabled = true;
                 numInterval.Enabled = true;
                 btnUpdateNow.Enabled = false;
                 chkUpdateOnLocalIPChange.Enabled = true;
@@ -107,6 +119,7 @@ namespace DynamicDnsUpdater
                 txtPassword.Enabled = false;
                 txtHostname.Enabled = false;
                 txtUpdateLink.Enabled = false;
+                txtbModifier.Enabled = false;
                 numInterval.Enabled = false;
                 btnUpdateNow.Enabled = true;
                 chkUpdateOnLocalIPChange.Enabled = false;
@@ -176,8 +189,10 @@ namespace DynamicDnsUpdater
                 txtPassword.Text = AppSettings.password;
                 txtHostname.Text = AppSettings.hostname;
                 txtUpdateLink.Text = AppSettings.updateLink;
+                txtbModifier.Text = AppSettings.modifier;
                 numInterval.Value = AppSettings.updateInterval;
                 chkUpdateOnLocalIPChange.Checked = AppSettings.checkAlsoLocalIpChange;
+                chkDebugMode.Checked = AppSettings.debugMode;
                 StartUpdateTask(); //everything is correct so start the update task
             }
             StartStatusUpdaterTask(); //label updater task
@@ -203,8 +218,10 @@ namespace DynamicDnsUpdater
                 AppSettings.password = txtPassword.Text;
                 AppSettings.hostname = txtHostname.Text;
                 AppSettings.updateLink = txtUpdateLink.Text;
+                AppSettings.modifier = txtbModifier.Text;
                 AppSettings.updateInterval = Convert.ToUInt32(numInterval.Value);
                 AppSettings.checkAlsoLocalIpChange = chkUpdateOnLocalIPChange.Checked;
+                AppSettings.debugMode = chkDebugMode.Checked;
                 if (utils.SaveSettings() == false) //save new settings to file
                     MessageBox.Show("Error saving settings\nCheck log (if enabled) for more informations", "Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 StartUpdateTask(); //start task
@@ -214,6 +231,19 @@ namespace DynamicDnsUpdater
             {
                 StopUpdateTask(); //stop the updater task while editing
                 EditOKMode(true);
+
+                // Log the preview URL when entering edit mode
+                string modifierParam = "";
+                if (!string.IsNullOrEmpty(txtbModifier.Text))
+                {
+                    if (!txtbModifier.Text.StartsWith("&"))
+                        modifierParam = "&" + txtbModifier.Text;
+                    else
+                        modifierParam = txtbModifier.Text;
+                }
+                string previewUrl = "https://" + txtUpdateLink.Text + "?hostname=" + txtHostname.Text + modifierParam;
+                utils.AddLog("Edit mode entered - Preview URL: " + previewUrl);
+                lblStatus.Text = "Preview URL: " + previewUrl;
             }
         }
 
@@ -244,7 +274,7 @@ namespace DynamicDnsUpdater
         {
             lblStatus.Text = "Updating...";
             this.Refresh();
-            utilityFunctions.UpdateStatus ret = utils.UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink);
+            utilityFunctions.UpdateStatus ret = utils.UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
             lblStatus.Text = "Manual update result: " + ret.ToString();
             utils.AddLog("Manually updating DNS: " + ret.ToString());
         }
@@ -465,6 +495,41 @@ namespace DynamicDnsUpdater
                 if (utils.SaveSettings() == false) //save new settings to file
                     MessageBox.Show("Error saving settings\nCheck log (if enabled) for more informations", "Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void chkDebugMode_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.debugMode = chkDebugMode.Checked;
+            if (chkDebugMode.Checked == true)
+            {
+                lblStatus.Text = "Debug mode enabled - DNS updates will be logged but not executed";
+                utils.AddLog("Debug mode enabled");
+            }
+            else
+            {
+                lblStatus.Text = "Debug mode disabled - DNS updates will be executed normally";
+                utils.AddLog("Debug mode disabled");
+            }
+            if (utils.SaveSettings() == false)
+                MessageBox.Show("Error saving settings\nCheck log (if enabled) for more informations", "Problem", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void txtbModifier_TextChanged(object sender, EventArgs e)
+        {
+            if (txtHostname.Text == "" || txtUpdateLink.Text == "")
+                return; //don't show preview if essential fields are empty
+
+            string modifierParam = "";
+            if (!string.IsNullOrEmpty(txtbModifier.Text))
+            {
+                if (!txtbModifier.Text.StartsWith("&"))
+                    modifierParam = "&" + txtbModifier.Text;
+                else
+                    modifierParam = txtbModifier.Text;
+            }
+
+            string previewUrl = "https://" + txtUpdateLink.Text + "?hostname=" + txtHostname.Text + modifierParam;
+            lblStatus.Text = "Preview URL: " + previewUrl;
         }
     }
 }

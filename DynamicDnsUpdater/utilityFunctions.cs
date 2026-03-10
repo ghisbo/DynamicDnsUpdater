@@ -1,4 +1,15 @@
-﻿using System;
+﻿/*
+ * Based on Dynamic DNS Updater from Nesos
+ * https://github.com/Nesos-ita/DynamicDnsUpdater
+ * 
+ * Modifications:
+ * - Added modifier field to support additional URL parameters (e.g., &myipv4=preserve)
+ * - Extended logging for network interfaces and DNS update requests
+ * - Added debug mode that logs requests without executing them
+ * - Enhanced network interface change detection logging
+ */
+
+using System;
 using System.Text;
 using System.Windows.Forms;
 
@@ -196,15 +207,33 @@ namespace DynamicDnsUpdater
         /// <param name="password"></param>
         /// <param name="hostname"></param>
         /// <param name="updateLink"></param>
+        /// <param name="modifier"></param>
         /// <returns></returns>
-        public UpdateStatus UpdateDns(string user, string password, string hostname, string updateLink)
+        public UpdateStatus UpdateDns(string user, string password, string hostname, string updateLink, string modifier = "")
         {
             try
             {
                 HttpWebRequest webRequest = null;
                 try
                 {
-                    webRequest = (HttpWebRequest)WebRequest.Create(new Uri("https://" + updateLink + "?hostname=" + hostname));
+                    string modifierParam = "";
+                    if (!string.IsNullOrEmpty(modifier))
+                    {
+                        if (!modifier.StartsWith("&"))
+                            modifierParam = "&" + modifier;
+                        else
+                            modifierParam = modifier;
+                    }
+                    string requestUrl = "https://" + updateLink + "?hostname=" + hostname + modifierParam;
+                    AddLog("Requesting URL: " + requestUrl);
+
+                    if (AppSettings.debugMode)
+                    {
+                        AddLog("DEBUG MODE: Web request NOT executed (simulated success)");
+                        return UpdateStatus.OK;
+                    }
+
+                    webRequest = (HttpWebRequest)WebRequest.Create(new Uri(requestUrl));
                 }
                 catch (UriFormatException ex)
                 {
@@ -447,15 +476,21 @@ namespace DynamicDnsUpdater
             try
             {
                 NetworkInterface[] interfcaces = NetworkInterface.GetAllNetworkInterfaces();
+                AddLog("Total network interfaces found: " + interfcaces.Length);
                 for (int i = 0; i < interfcaces.Length; i++)
                 {
                     //less restrictive filter might be != NetworkInterfaceType.Loopback, now is strict compared to GetIsNetworkAvailable()
                     if (interfcaces[i].OperationalStatus == OperationalStatus.Up && (interfcaces[i].NetworkInterfaceType == NetworkInterfaceType.Ethernet || interfcaces[i].NetworkInterfaceType == NetworkInterfaceType.Wireless80211))
+                    {
                         validInterfaces.Add(interfcaces[i]);
+                        AddLog("Active interface: " + interfcaces[i].Name + " (" + interfcaces[i].NetworkInterfaceType.ToString() + ") - ID: " + interfcaces[i].Id);
+                    }
                 }
+                AddLog("Valid active interfaces: " + validInterfaces.Count);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AddLog("Error listing network interfaces: " + ex.Message);
                 return new List<NetworkInterface>();
             }
             return validInterfaces;
@@ -477,12 +512,16 @@ namespace DynamicDnsUpdater
                     if (ipInfo.UnicastAddresses[i].Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     {
                         ip = ipInfo.UnicastAddresses[i].Address;
+                        AddLog("Interface " + netInterface.Name + " has IPv4: " + ip.ToString());
                         break;
                     }
                 }
+                if (ip == null)
+                    AddLog("Interface " + netInterface.Name + " has no IPv4 address");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AddLog("Error querying interface IP for " + netInterface.Name + ": " + ex.Message);
                 return null;
             }
             return ip;
@@ -520,6 +559,7 @@ namespace DynamicDnsUpdater
             if (oldNetCardIdAndIp == null)
             {
                 oldNetCardIdAndIp = currentNetCardIdAndIp;
+                AddLog("First network status check - Current interfaces: " + currentNetCardIdAndIp.Count);
                 return false; //first start
             }
             if (oldNetCardIdAndIp.Count == currentNetCardIdAndIp.Count)
@@ -527,13 +567,22 @@ namespace DynamicDnsUpdater
                 for (int i = 0; i < oldNetCardIdAndIp.Count; i++)
                 {
                     if (oldNetCardIdAndIp.Contains(currentNetCardIdAndIp[i]) == false)//check if ip or network card is changed
+                    {
                         ipOrNetworkCardChanged = true;
+                        AddLog("Network change detected - Interface/IP changed: " + currentNetCardIdAndIp[i]);
+                    }
                 }
             }
             else
+            {
                 ipOrNetworkCardChanged = true; //number of active network cards changed, update ddns
+                AddLog("Network change detected - Interface count changed from " + oldNetCardIdAndIp.Count + " to " + currentNetCardIdAndIp.Count);
+            }
             if (currentNetCardIdAndIp.Count == 0)
+            {
                 ipOrNetworkCardChanged = false;//connected to disconnected is a change, but a useless one
+                AddLog("No active network interfaces detected");
+            }
             oldNetCardIdAndIp = currentNetCardIdAndIp;
             return ipOrNetworkCardChanged;
         }
@@ -550,7 +599,7 @@ namespace DynamicDnsUpdater
             bool ipChanged = false;
             timerWait tmrRateLimiter = new timerWait();
 
-            ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink);
+            ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
             AppSettings.lastUpdateStatus = ret;
             AppSettings.lastUpdateStatusChanged = true;
             AddLog("Updating DNS: " + ret.ToString());
@@ -559,7 +608,7 @@ namespace DynamicDnsUpdater
             {
                 if (Wait(ref tmrTimedUpdate, AppSettings.updateInterval * 60) == true)//default updateInterval is 60 min
                 {
-                    ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink);
+                    ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
                     AppSettings.lastUpdateStatus = ret;
                     AppSettings.lastUpdateStatusChanged = true;
                     AddLog("Updating DNS: " + ret.ToString());
@@ -569,15 +618,21 @@ namespace DynamicDnsUpdater
                 {
                     if (Wait(ref tmrIpChangeDetect, 30) == true)//every 30 second check for local ip change
                     {
+                        AddLog("Checking for network interface changes...");
                         ipChanged = IpIdChangedSinceLastCall();
+                        if (ipChanged)
+                        {
+                            AddLog("*** NETWORK INTERFACE CHANGED - Update scheduled in 15 seconds ***");
+                        }
                         tmrIpChangeUpdate.oldTime = DateTime.Now;//reset timer
                     }
                     if (Wait(ref tmrIpChangeUpdate, 15) == true && ipChanged == true && ipBasedUpdaterRateLimiter > 0)//after 15 second do the actual update
                     {
                         //if status changed and i have lives, update ddns. 30sec delay to ensure you are connected after network change
+                        AddLog("Network interface change confirmed, triggering DNS update (rate limiter: " + ipBasedUpdaterRateLimiter + "/3)");
                         ipChanged = false;//disable timer
                         ipBasedUpdaterRateLimiter--;//use a life
-                        ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink);
+                        ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
                         AppSettings.lastUpdateStatus = ret;
                         AppSettings.lastUpdateStatusChanged = true;
                         tmrTimedUpdate.oldTime = DateTime.Now;//reset timer, we updated just now because of ip change, so reset timed update
@@ -614,6 +669,9 @@ namespace DynamicDnsUpdater
                     string password = reader.ReadLine();
                     string hostname = reader.ReadLine();
                     string updateLink = reader.ReadLine();
+                    string modifier = "";
+                    if (reader.EndOfStream == false)//compatibility with older version (where there wasn't modifier)
+                        modifier = reader.ReadLine();
                     uint updateInterval = Convert.ToUInt32(reader.ReadLine());
                     if (updateInterval < 1)
                         updateInterval = 1;
@@ -626,6 +684,9 @@ namespace DynamicDnsUpdater
                     bool checkIpUpdate = false;
                     if (reader.EndOfStream == false)//compatibility with older version (where there wasn't ip setting)
                         checkIpUpdate = Convert.ToBoolean(reader.ReadLine());
+                    bool debugMode = false;
+                    if (reader.EndOfStream == false)//compatibility with older version (where there wasn't debug mode)
+                        debugMode = Convert.ToBoolean(reader.ReadLine());
                     if (reader.EndOfStream == false)
                         throw new Exception("Incorrect file format, too long");
                     reader.Close(); //if we reach this point settings has been sucesfully read
@@ -651,11 +712,13 @@ namespace DynamicDnsUpdater
                     AppSettings.password = password;
                     AppSettings.hostname = hostname;
                     AppSettings.updateLink = updateLink;
+                    AppSettings.modifier = modifier;
                     AppSettings.updateInterval = updateInterval;
                     AppSettings.originalLogSetting = tempLogStatus;
                     if (AppSettings.overrideLogOption == false)//log option from cmdline, don't use file settings
                         AppSettings.logSetting = tempLogStatus;
                     AppSettings.checkAlsoLocalIpChange = checkIpUpdate;
+                    AppSettings.debugMode = debugMode;
                     AppSettings.firstRun = false;
                     AddLog("Settings read OK");
                     return true;
@@ -683,12 +746,14 @@ namespace DynamicDnsUpdater
                 writer.WriteLine(AppSettings.password);
                 writer.WriteLine(AppSettings.hostname);
                 writer.WriteLine(AppSettings.updateLink);
+                writer.WriteLine(AppSettings.modifier);
                 writer.WriteLine(AppSettings.updateInterval.ToString());
                 if (AppSettings.overrideLogOption == false)
                     writer.WriteLine(AppSettings.logSetting.ToString());//devo scrivere l'originale
                 else
                     writer.WriteLine(AppSettings.originalLogSetting.ToString());
                 writer.WriteLine(AppSettings.checkAlsoLocalIpChange);
+                writer.WriteLine(AppSettings.debugMode);
                 writer.Close();
                 AddLog("Settings saved OK");
                 return true;

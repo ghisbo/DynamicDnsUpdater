@@ -63,8 +63,11 @@
             this.optLogAppDir = new System.Windows.Forms.RadioButton();
             this.optLogTempDir = new System.Windows.Forms.RadioButton();
             this.optLogNo = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkUpdateOnLocalIPChange = new System.Windows.Forms.CheckBox();
+            this.lblModifier = new System.Windows.Forms.Label();
+            this.txtbModifier = new System.Windows.Forms.TextBox();
+            this.chkDebugMode = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -87,7 +90,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 352);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 402);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(430, 22);
             this.statusStrip1.SizingGrip = false;
@@ -149,7 +152,7 @@
             this.statusImg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.statusImg.Enabled = false;
             this.statusImg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.statusImg.Location = new System.Drawing.Point(408, 352);
+            this.statusImg.Location = new System.Drawing.Point(408, 402);
             this.statusImg.Name = "statusImg";
             this.statusImg.Size = new System.Drawing.Size(22, 22);
             this.statusImg.TabIndex = 0;
@@ -173,7 +176,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(177, 118);
+            this.label1.Location = new System.Drawing.Point(177, 151);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 13);
             this.label1.TabIndex = 0;
@@ -183,7 +186,7 @@
             // btnEditOK
             // 
             this.btnEditOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEditOK.Location = new System.Drawing.Point(322, 116);
+            this.btnEditOK.Location = new System.Drawing.Point(322, 143);
             this.btnEditOK.Name = "btnEditOK";
             this.btnEditOK.Size = new System.Drawing.Size(78, 27);
             this.btnEditOK.TabIndex = 7;
@@ -195,7 +198,7 @@
             // numInterval
             // 
             this.numInterval.Enabled = false;
-            this.numInterval.Location = new System.Drawing.Point(85, 116);
+            this.numInterval.Location = new System.Drawing.Point(85, 149);
             this.numInterval.Maximum = new decimal(new int[] {
             1440,
             0,
@@ -243,7 +246,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 118);
+            this.label5.Location = new System.Drawing.Point(6, 151);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(73, 13);
             this.label5.TabIndex = 0;
@@ -253,7 +256,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 41);
+            this.label4.Location = new System.Drawing.Point(19, 41);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(56, 13);
             this.label4.TabIndex = 0;
@@ -264,7 +267,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 16);
+            this.label3.Location = new System.Drawing.Point(19, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 0;
@@ -352,7 +355,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(21, 67);
+            this.label10.Location = new System.Drawing.Point(19, 67);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 13);
             this.label10.TabIndex = 0;
@@ -362,7 +365,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(21, 93);
+            this.label11.Location = new System.Drawing.Point(19, 119);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(59, 13);
             this.label11.TabIndex = 0;
@@ -373,7 +376,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(85, 93);
+            this.label12.Location = new System.Drawing.Point(85, 119);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(43, 13);
             this.label12.TabIndex = 0;
@@ -387,7 +390,7 @@
             this.txtUpdateLink.Items.AddRange(new object[] {
             "update.dedyn.io",
             "dynupdate.no-ip.com/nic/update"});
-            this.txtUpdateLink.Location = new System.Drawing.Point(126, 90);
+            this.txtUpdateLink.Location = new System.Drawing.Point(126, 116);
             this.txtUpdateLink.Name = "txtUpdateLink";
             this.txtUpdateLink.Size = new System.Drawing.Size(201, 21);
             this.txtUpdateLink.TabIndex = 4;
@@ -399,7 +402,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(326, 93);
+            this.label6.Location = new System.Drawing.Point(326, 119);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(74, 13);
             this.label6.TabIndex = 0;
@@ -454,10 +457,60 @@
             this.infoTip.SetToolTip(this.optLogNo, "Disable logging");
             this.optLogNo.UseVisualStyleBackColor = true;
             // 
+            // chkUpdateOnLocalIPChange
+            // 
+            this.chkUpdateOnLocalIPChange.Checked = true;
+            this.chkUpdateOnLocalIPChange.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUpdateOnLocalIPChange.Enabled = false;
+            this.chkUpdateOnLocalIPChange.Location = new System.Drawing.Point(216, 143);
+            this.chkUpdateOnLocalIPChange.Name = "chkUpdateOnLocalIPChange";
+            this.chkUpdateOnLocalIPChange.Size = new System.Drawing.Size(100, 30);
+            this.chkUpdateOnLocalIPChange.TabIndex = 6;
+            this.chkUpdateOnLocalIPChange.Text = "Update also on local IP change";
+            this.infoTip.SetToolTip(this.chkUpdateOnLocalIPChange, "Useful extra as it attempt to detect when you change network: new interface (wifi" +
+        "/ethernet) or new ip, this can\'t be perfect so timed update will be always on");
+            this.chkUpdateOnLocalIPChange.UseVisualStyleBackColor = true;
+            // 
+            // lblModifier
+            // 
+            this.lblModifier.AutoSize = true;
+            this.lblModifier.Location = new System.Drawing.Point(19, 94);
+            this.lblModifier.Name = "lblModifier";
+            this.lblModifier.Size = new System.Drawing.Size(44, 13);
+            this.lblModifier.TabIndex = 8;
+            this.lblModifier.Text = "Modifier";
+            this.infoTip.SetToolTip(this.lblModifier, "Hostname to be updated; for example \"something.dedyn.io\"");
+            // 
+            // txtbModifier
+            // 
+            this.txtbModifier.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtbModifier.Enabled = false;
+            this.txtbModifier.Location = new System.Drawing.Point(85, 91);
+            this.txtbModifier.Name = "txtbModifier";
+            this.txtbModifier.Size = new System.Drawing.Size(315, 20);
+            this.txtbModifier.TabIndex = 9;
+            this.infoTip.SetToolTip(this.txtbModifier, "modifier ex &preserve...");
+            this.txtbModifier.TextChanged += new System.EventHandler(this.txtbModifier_TextChanged);
+            // 
+            // chkDebugMode
+            // 
+            this.chkDebugMode.AutoSize = true;
+            this.chkDebugMode.Location = new System.Drawing.Point(300, 16);
+            this.chkDebugMode.Name = "chkDebugMode";
+            this.chkDebugMode.Size = new System.Drawing.Size(88, 17);
+            this.chkDebugMode.TabIndex = 21;
+            this.chkDebugMode.Text = "Debug Mode";
+            this.infoTip.SetToolTip(this.chkDebugMode, "When enabled, DNS update requests are logged but not executed (for testing)");
+            this.chkDebugMode.UseVisualStyleBackColor = true;
+            this.chkDebugMode.CheckedChanged += new System.EventHandler(this.chkDebugMode_CheckedChanged);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.lblModifier);
+            this.groupBox1.Controls.Add(this.txtbModifier);
             this.groupBox1.Controls.Add(this.chkUpdateOnLocalIPChange);
             this.groupBox1.Controls.Add(this.txtUpdateLink);
             this.groupBox1.Controls.Add(this.label11);
@@ -475,24 +528,10 @@
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(406, 150);
+            this.groupBox1.Size = new System.Drawing.Size(406, 186);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Main settings";
-            // 
-            // chkUpdateOnLocalIPChange
-            // 
-            this.chkUpdateOnLocalIPChange.Checked = true;
-            this.chkUpdateOnLocalIPChange.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUpdateOnLocalIPChange.Enabled = false;
-            this.chkUpdateOnLocalIPChange.Location = new System.Drawing.Point(216, 115);
-            this.chkUpdateOnLocalIPChange.Name = "chkUpdateOnLocalIPChange";
-            this.chkUpdateOnLocalIPChange.Size = new System.Drawing.Size(100, 30);
-            this.chkUpdateOnLocalIPChange.TabIndex = 6;
-            this.chkUpdateOnLocalIPChange.Text = "Update also on local IP change";
-            this.infoTip.SetToolTip(this.chkUpdateOnLocalIPChange, "Useful extra as it attempt to detect when you change network: new interface (wifi" +
-        "/ethernet) or new ip, this can\'t be perfect so timed update will be always on");
-            this.chkUpdateOnLocalIPChange.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -510,9 +549,9 @@
             this.groupBox2.Controls.Add(this.btnGetIP);
             this.groupBox2.Controls.Add(this.txtIP);
             this.groupBox2.Controls.Add(this.btnUpdateNow);
-            this.groupBox2.Location = new System.Drawing.Point(12, 168);
+            this.groupBox2.Location = new System.Drawing.Point(12, 204);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(406, 181);
+            this.groupBox2.Size = new System.Drawing.Size(406, 192);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Utility";
@@ -523,6 +562,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.optAutorunNo);
             this.groupBox4.Controls.Add(this.optAutorunUser);
+            this.groupBox4.Controls.Add(this.chkDebugMode);
             this.groupBox4.Controls.Add(this.optAutorunAdmin);
             this.groupBox4.Location = new System.Drawing.Point(6, 136);
             this.groupBox4.Name = "groupBox4";
@@ -578,12 +618,12 @@
             this.trayIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.trayIconMenu.Name = "tryIconMenu";
-            this.trayIconMenu.Size = new System.Drawing.Size(93, 26);
+            this.trayIconMenu.Size = new System.Drawing.Size(94, 26);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -591,7 +631,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 374);
+            this.ClientSize = new System.Drawing.Size(430, 424);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.statusImg);
@@ -600,7 +640,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Nesos - Dynamic Dns Updater";
+            this.Text = "Nesos Mod Benes - Dynamic Dns Updater";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
@@ -665,6 +705,9 @@
         private System.Windows.Forms.RadioButton optLogNo;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox chkUpdateOnLocalIPChange;
+        private System.Windows.Forms.Label lblModifier;
+        private System.Windows.Forms.TextBox txtbModifier;
+        private System.Windows.Forms.CheckBox chkDebugMode;
     }
 }
 
