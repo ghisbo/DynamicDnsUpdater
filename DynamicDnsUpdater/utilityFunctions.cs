@@ -211,6 +211,7 @@ namespace DynamicDnsUpdater
         /// <returns></returns>
         public UpdateStatus UpdateDns(string user, string password, string hostname, string updateLink, string modifier = "")
         {
+            string requestDateTime = DateTime.Now.ToString();
             try
             {
                 HttpWebRequest webRequest = null;
@@ -230,6 +231,8 @@ namespace DynamicDnsUpdater
                     if (AppSettings.debugMode)
                     {
                         AddLog("DEBUG MODE: Web request NOT executed (simulated success)");
+                        AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + requestUrl + " -> DEBUG MODE (simulated OK)";
+                        AppSettings.webRequestInfoChanged = true;
                         return UpdateStatus.OK;
                     }
 
@@ -238,6 +241,8 @@ namespace DynamicDnsUpdater
                 catch (UriFormatException ex)
                 {
                     AddLog("Update link error: " + ex.Message);
+                    AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + "Invalid URL format -> " + ex.Message;
+                    AppSettings.webRequestInfoChanged = true;
                     return UpdateStatus.InvalidUpdateLink;
                 }
                 webRequest.Timeout = 10000; //timeout for the operation, wait no more than 10 seconds for an answer
@@ -249,6 +254,9 @@ namespace DynamicDnsUpdater
                 if (webResponse.StatusCode != HttpStatusCode.OK)
                 {
                     AddLog("Error, WebResponse returned: " + webResponse.StatusCode.ToString()); //probably never ends here since it throw exceptions
+                    string requestUrl = webRequest.RequestUri.ToString();
+                    AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + requestUrl + " -> ERROR: " + webResponse.StatusCode.ToString();
+                    AppSettings.webRequestInfoChanged = true;
                     return UpdateStatus.UnknownError;
                 }
                 StreamReader reader = new StreamReader(webResponse.GetResponseStream());
@@ -258,16 +266,27 @@ namespace DynamicDnsUpdater
                 if (result == null || result == "")
                 {
                     AddLog("Error, server null or empty response");
+                    string requestUrl = webRequest.RequestUri.ToString();
+                    AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + requestUrl + " -> ERROR: null or empty response";
+                    AppSettings.webRequestInfoChanged = true;
                     return UpdateStatus.UpdateFailed;
                 }
                 if (result.StartsWith("good", StringComparison.OrdinalIgnoreCase) == true || (result.StartsWith("nochg", StringComparison.OrdinalIgnoreCase) == true)) //compare + ignore case (start with? good || nochg)
+                {
+                    string requestUrl = webRequest.RequestUri.ToString();
+                    AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + requestUrl + " -> " + result;
+                    AppSettings.webRequestInfoChanged = true;
                     return UpdateStatus.OK;
+                }
                 else
                 {
                     int len = result.Length;
                     if (len > 255)
                         len = 255; //avoid abusing error log, short messages can't fill the hdd
                     AddLog("Error, server says: " + result.Substring(0, len));
+                    string requestUrl = webRequest.RequestUri.ToString();
+                    AppSettings.lastWebRequestInfo = requestDateTime + "\r\n" + requestUrl + " -> ERROR: " + result.Substring(0, len);
+                    AppSettings.webRequestInfoChanged = true;
                     return UpdateStatus.UpdateFailed;
                 }
             }

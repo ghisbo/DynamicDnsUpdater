@@ -41,6 +41,8 @@ namespace DynamicDnsUpdater
         public static bool lastUpdateStatusChanged = false;
         public static string logFileName = "ddu.log";
         public static string settingsFileName = "dduSettings.txt";
+        public static string lastWebRequestInfo = ""; //stores datetime + url + result for UI display
+        public static bool webRequestInfoChanged = false;
 
     }
 }

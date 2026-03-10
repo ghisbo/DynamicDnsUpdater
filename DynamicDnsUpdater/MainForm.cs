@@ -77,6 +77,15 @@ namespace DynamicDnsUpdater
                         Invoke((MethodInvoker)delegate () { StopUpdateTask(); });
                     lblStatus.Text = "Update result: " + AppSettings.lastUpdateStatus.ToString();
                 }
+                if (AppSettings.webRequestInfoChanged == true)
+                {
+                    AppSettings.webRequestInfoChanged = false;
+                    Invoke((MethodInvoker)delegate () 
+                    { 
+                        if (txtbWebrequest != null)
+                            txtbWebrequest.Text = AppSettings.lastWebRequestInfo;
+                    });
+                }
                 System.Threading.Thread.Sleep(2000);
             }
         }

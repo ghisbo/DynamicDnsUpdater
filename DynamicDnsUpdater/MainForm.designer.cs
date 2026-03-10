@@ -76,6 +76,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.trayIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtbWebrequest = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -90,9 +91,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.lblStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 402);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 465);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(430, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(466, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
@@ -137,10 +138,10 @@
             // 
             // txtIP
             // 
-            this.txtIP.Location = new System.Drawing.Point(104, 26);
+            this.txtIP.Location = new System.Drawing.Point(107, 26);
             this.txtIP.Name = "txtIP";
             this.txtIP.ReadOnly = true;
-            this.txtIP.Size = new System.Drawing.Size(92, 20);
+            this.txtIP.Size = new System.Drawing.Size(144, 20);
             this.txtIP.TabIndex = 9;
             this.infoTip.SetToolTip(this.txtIP, "Here you can find your IP address if you requested it");
             this.txtIP.Click += new System.EventHandler(this.txtIP_Click);
@@ -152,7 +153,7 @@
             this.statusImg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.statusImg.Enabled = false;
             this.statusImg.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.statusImg.Location = new System.Drawing.Point(408, 402);
+            this.statusImg.Location = new System.Drawing.Point(444, 465);
             this.statusImg.Name = "statusImg";
             this.statusImg.Size = new System.Drawing.Size(22, 22);
             this.statusImg.TabIndex = 0;
@@ -164,7 +165,7 @@
             // btnUpdateNow
             // 
             this.btnUpdateNow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdateNow.Location = new System.Drawing.Point(221, 22);
+            this.btnUpdateNow.Location = new System.Drawing.Point(257, 22);
             this.btnUpdateNow.Name = "btnUpdateNow";
             this.btnUpdateNow.Size = new System.Drawing.Size(177, 27);
             this.btnUpdateNow.TabIndex = 10;
@@ -186,7 +187,7 @@
             // btnEditOK
             // 
             this.btnEditOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEditOK.Location = new System.Drawing.Point(322, 143);
+            this.btnEditOK.Location = new System.Drawing.Point(358, 143);
             this.btnEditOK.Name = "btnEditOK";
             this.btnEditOK.Size = new System.Drawing.Size(78, 27);
             this.btnEditOK.TabIndex = 7;
@@ -226,7 +227,7 @@
             this.txtPassword.Enabled = false;
             this.txtPassword.Location = new System.Drawing.Point(85, 38);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(315, 20);
+            this.txtPassword.Size = new System.Drawing.Size(351, 20);
             this.txtPassword.TabIndex = 2;
             this.infoTip.SetToolTip(this.txtPassword, "The password that you selected / that has bend send to you by email at the regist" +
         "ration time");
@@ -239,7 +240,7 @@
             this.txtUser.Enabled = false;
             this.txtUser.Location = new System.Drawing.Point(85, 13);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(315, 20);
+            this.txtUser.Size = new System.Drawing.Size(351, 20);
             this.txtUser.TabIndex = 1;
             this.infoTip.SetToolTip(this.txtUser, "The Username that you used when you registered your new account");
             // 
@@ -288,7 +289,7 @@
             // txtIpResolved
             // 
             this.txtIpResolved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtIpResolved.Location = new System.Drawing.Point(308, 68);
+            this.txtIpResolved.Location = new System.Drawing.Point(344, 68);
             this.txtIpResolved.Name = "txtIpResolved";
             this.txtIpResolved.ReadOnly = true;
             this.txtIpResolved.Size = new System.Drawing.Size(92, 20);
@@ -348,7 +349,7 @@
             this.txtHostname.Enabled = false;
             this.txtHostname.Location = new System.Drawing.Point(85, 64);
             this.txtHostname.Name = "txtHostname";
-            this.txtHostname.Size = new System.Drawing.Size(315, 20);
+            this.txtHostname.Size = new System.Drawing.Size(351, 20);
             this.txtHostname.TabIndex = 3;
             this.infoTip.SetToolTip(this.txtHostname, "Hostname to be updated; for example \"something.dedyn.io\"");
             // 
@@ -402,7 +403,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(326, 119);
+            this.label6.Location = new System.Drawing.Point(362, 119);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(74, 13);
             this.label6.TabIndex = 0;
@@ -413,7 +414,7 @@
             // 
             this.btnOpenLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpenLog.Enabled = false;
-            this.btnOpenLog.Location = new System.Drawing.Point(302, 8);
+            this.btnOpenLog.Location = new System.Drawing.Point(338, 8);
             this.btnOpenLog.Name = "btnOpenLog";
             this.btnOpenLog.Size = new System.Drawing.Size(75, 27);
             this.btnOpenLog.TabIndex = 17;
@@ -488,7 +489,7 @@
             this.txtbModifier.Enabled = false;
             this.txtbModifier.Location = new System.Drawing.Point(85, 91);
             this.txtbModifier.Name = "txtbModifier";
-            this.txtbModifier.Size = new System.Drawing.Size(315, 20);
+            this.txtbModifier.Size = new System.Drawing.Size(351, 20);
             this.txtbModifier.TabIndex = 9;
             this.infoTip.SetToolTip(this.txtbModifier, "modifier ex &preserve...");
             this.txtbModifier.TextChanged += new System.EventHandler(this.txtbModifier_TextChanged);
@@ -509,6 +510,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtbWebrequest);
             this.groupBox1.Controls.Add(this.lblModifier);
             this.groupBox1.Controls.Add(this.txtbModifier);
             this.groupBox1.Controls.Add(this.chkUpdateOnLocalIPChange);
@@ -528,7 +530,7 @@
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(406, 186);
+            this.groupBox1.Size = new System.Drawing.Size(442, 238);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Main settings";
@@ -549,9 +551,9 @@
             this.groupBox2.Controls.Add(this.btnGetIP);
             this.groupBox2.Controls.Add(this.txtIP);
             this.groupBox2.Controls.Add(this.btnUpdateNow);
-            this.groupBox2.Location = new System.Drawing.Point(12, 204);
+            this.groupBox2.Location = new System.Drawing.Point(12, 274);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(406, 192);
+            this.groupBox2.Size = new System.Drawing.Size(442, 185);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Utility";
@@ -566,7 +568,7 @@
             this.groupBox4.Controls.Add(this.optAutorunAdmin);
             this.groupBox4.Location = new System.Drawing.Point(6, 136);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(394, 40);
+            this.groupBox4.Size = new System.Drawing.Size(430, 40);
             this.groupBox4.TabIndex = 18;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Autorun";
@@ -581,7 +583,7 @@
             this.groupBox3.Controls.Add(this.optLogNo);
             this.groupBox3.Location = new System.Drawing.Point(6, 97);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(394, 37);
+            this.groupBox3.Size = new System.Drawing.Size(430, 37);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Log mode";
@@ -627,11 +629,22 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // txtbWebrequest
+            // 
+            this.txtbWebrequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtbWebrequest.Enabled = false;
+            this.txtbWebrequest.Location = new System.Drawing.Point(9, 179);
+            this.txtbWebrequest.Multiline = true;
+            this.txtbWebrequest.Name = "txtbWebrequest";
+            this.txtbWebrequest.Size = new System.Drawing.Size(427, 46);
+            this.txtbWebrequest.TabIndex = 10;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 424);
+            this.ClientSize = new System.Drawing.Size(466, 487);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.statusImg);
@@ -708,6 +721,7 @@
         private System.Windows.Forms.Label lblModifier;
         private System.Windows.Forms.TextBox txtbModifier;
         private System.Windows.Forms.CheckBox chkDebugMode;
+        private System.Windows.Forms.TextBox txtbWebrequest;
     }
 }
 
