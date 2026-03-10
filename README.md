@@ -12,7 +12,7 @@
 - 🔍 **Enhanced Network Interface Detection**: Detailed logging of network changes that trigger updates
 - 📺 **Web Request Display**: Real-time display of datetime, URL, and results in the UI textbox
 
-> **Note**: Screenshot needs to be updated to show the new features (Modifier field, Debug Mode checkbox, and Web Request display textbox)
+![screenshot](Documentation/screenshot.png)  
 
 ## How to use and configure:
 1.  Download the program under [Compiled Binary/DynamicDnsUpdater.exe](https://github.com/Nesos-ita/DynamicDnsUpdater/raw/master/Compiled%20Binary/DynamicDnsUpdater.exe)  
