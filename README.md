@@ -1,7 +1,20 @@
-# DynamicDnsUpdater
-***Allows you to keep updated the Dynamic DNS easily***  
+# Benes Dynamic DNS Updater
+
+***Modified version of DynamicDnsUpdater with enhanced features***
+
+**Based on**: [DynamicDnsUpdater by Nesos](https://github.com/Nesos-ita/DynamicDnsUpdater)
+
+## Modifications in This Version
+
+- ✨ **URL Modifier Field**: Support for additional URL parameters (e.g., `&myipv4=preserve`)
+- 📊 **Extended Logging**: Comprehensive logging for network interfaces and DNS update requests
+- 🐛 **Debug Mode**: Test mode that logs requests without executing them (perfect for testing)
+- 🔍 **Enhanced Network Interface Detection**: Detailed logging of network changes that trigger updates
+- 📺 **Web Request Display**: Real-time display of datetime, URL, and results in the UI textbox
+
 ![screenshot](Documentation/screenshot.png)  
-## How to use and configure:  
+
+## How to use and configure:
 1.  Download the program under [Compiled Binary/DynamicDnsUpdater.exe](https://github.com/Nesos-ita/DynamicDnsUpdater/raw/master/Compiled%20Binary/DynamicDnsUpdater.exe)  
 2. Optional but suggested: Check the digital signature using [my public key](Documentation/Nesos%20code%20signing%20public%20key.asc). (You can find more informations about digital signatures and why they are important [here](https://www.qubes-os.org/doc/verifying-signatures/))  
 3. Open and follow on screen instructions  (fill data and click ok)
@@ -24,8 +37,15 @@ If something doesn't work try to enable and view the log, it has useful informat
 Let me know if you find any bug by reporting them  
 Also report feature requests  
 
-For more complete and detailed informations check:  
+## Original Project Credits
+
+This is a modified version based on the excellent work by **Nesos**.
+
+- **Original Repository**: https://github.com/Nesos-ita/DynamicDnsUpdater
+- **Original Author**: Nesos
+
+For more complete and detailed informations about the original project check:  
 **[FAQ](Documentation/FAQ.md)**  
 **[Security FAQ](Documentation/Security%20FAQ.md)**  
 **[File format specifications](Documentation/File%20format%20specifications.md)**  
-**[Version history](Documentation/Version%20history.md)**  
+**[Version history](Documentation/Version%20history.md)**
