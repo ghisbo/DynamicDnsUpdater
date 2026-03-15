@@ -20,6 +20,8 @@ using Microsoft.Win32;
 using System.Security.Principal;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace DynamicDnsUpdater
 {
@@ -36,6 +38,7 @@ namespace DynamicDnsUpdater
         //const string updateLinkIPv6= "https://update6.dedyn.io"; //NOT USED NOW
         const string checkIpLink = "https://checkip.dedyn.io";
         List<string> oldNetCardIdAndIp = null; //used by IpIdChangedSinceLastCall
+        IPAddress oldWanIp = null; //used by WanIpChangedSinceLastCall
         int ipBasedUpdaterRateLimiter = 3;//change also max "lives" in the wait timer
 
         /// <summary>
@@ -516,6 +519,34 @@ namespace DynamicDnsUpdater
         }
 
         /// <summary>
+        /// returns ipv4 of the wan interface (ipv6 does not work, you cannot portmap ipv6 on proximus)
+        /// using api of ipify.org https://www.ipify.org/
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IPAddress> QueryWanIPAsync()
+        {
+            IPAddress wanIp = null;
+            try
+            {
+                var httpClient = new HttpClient();
+                var ip = await httpClient.GetStringAsync("https://api.ipify.org");
+                if (ip == null)
+                    AddLog("Wan interface has no IPv4 address");
+                else
+                {
+                    wanIp = IPAddress.Parse(ip);
+                    AddLog("Wan IP: " + wanIp.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLog("Error querying https://www.ipify.org for Wan IP" + ": " + ex.Message);
+                return null;
+            }
+            return wanIp;
+        }
+
+        /// <summary>
         /// returns ipv4 of the interface (the first internet ipv4)
         /// </summary>
         /// <param name="netInterface"></param>
@@ -607,6 +638,60 @@ namespace DynamicDnsUpdater
         }
 
         /// <summary>
+        /// returns true if the WAN IP is not equal to the old one, false if IP is not changed or first call
+        /// </summary>
+        /// <returns></returns>
+        public bool WanIpChangedSinceLastCall()
+        {
+            bool wanIpChanged = false;
+            IPAddress currentWanIp = null;
+
+            try
+            {
+                // Call async method synchronously (not ideal but works for .NET Framework 4.8)
+                var task = QueryWanIPAsync();
+                task.Wait();
+                currentWanIp = task.Result;
+            }
+            catch (Exception ex)
+            {
+                AddLog("Error getting WAN IP: " + ex.Message);
+                return false;
+            }
+
+            if (oldWanIp == null)
+            {
+                oldWanIp = currentWanIp;
+                if (currentWanIp != null)
+                {
+                    AddLog("First WAN IP check - Current WAN IP: " + currentWanIp.ToString());
+                    AppSettings.currentWanIp = currentWanIp.ToString();
+                    AppSettings.wanIpChanged = true;
+                }
+                return false; //first start
+            }
+
+            if (currentWanIp == null)
+            {
+                AddLog("Unable to retrieve WAN IP");
+                AppSettings.currentWanIp = "Unable to retrieve";
+                AppSettings.wanIpChanged = true;
+                return false;
+            }
+
+            if (!oldWanIp.Equals(currentWanIp))
+            {
+                wanIpChanged = true;
+                AddLog("WAN IP change detected - Old: " + oldWanIp.ToString() + " -> New: " + currentWanIp.ToString());
+                oldWanIp = currentWanIp;
+                AppSettings.currentWanIp = currentWanIp.ToString();
+                AppSettings.wanIpChanged = true;
+            }
+
+            return wanIpChanged;
+        }
+
+        /// <summary>
         /// Wait the desidered time and update DNS
         /// </summary>
         public void WaitAndUpdate()
@@ -615,7 +700,10 @@ namespace DynamicDnsUpdater
             timerWait tmrTimedUpdate = new timerWait();
             timerWait tmrIpChangeDetect = new timerWait();
             timerWait tmrIpChangeUpdate = new timerWait();
+            timerWait tmrWanIpChangeDetect = new timerWait();
+            timerWait tmrWanIpChangeUpdate = new timerWait();
             bool ipChanged = false;
+            bool wanIpChanged = false;
             timerWait tmrRateLimiter = new timerWait();
 
             ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
@@ -660,6 +748,34 @@ namespace DynamicDnsUpdater
                         else
                             AddLog("Ip changed (rate limited), updating DNS: " + ret.ToString());
                     }
+
+                    // Check for WAN IP changes every 60 seconds
+                    if (Wait(ref tmrWanIpChangeDetect, 60) == true)
+                    {
+                        AddLog("Checking for WAN IP changes...");
+                        wanIpChanged = WanIpChangedSinceLastCall();
+                        if (wanIpChanged)
+                        {
+                            AddLog("*** WAN IP CHANGED - Update scheduled in 15 seconds ***");
+                        }
+                        tmrWanIpChangeUpdate.oldTime = DateTime.Now;//reset timer
+                    }
+                    if (Wait(ref tmrWanIpChangeUpdate, 15) == true && wanIpChanged == true && ipBasedUpdaterRateLimiter > 0)//after 15 second do the actual update
+                    {
+                        //if WAN IP changed and i have lives, update ddns. 15sec delay to ensure connection is stable
+                        AddLog("WAN IP change confirmed, triggering DNS update (rate limiter: " + ipBasedUpdaterRateLimiter + "/3)");
+                        wanIpChanged = false;//disable timer
+                        ipBasedUpdaterRateLimiter--;//use a life
+                        ret = UpdateDns(AppSettings.user, AppSettings.password, AppSettings.hostname, AppSettings.updateLink, AppSettings.modifier);
+                        AppSettings.lastUpdateStatus = ret;
+                        AppSettings.lastUpdateStatusChanged = true;
+                        tmrTimedUpdate.oldTime = DateTime.Now;//reset timer, we updated just now because of WAN IP change, so reset timed update
+                        if (ipBasedUpdaterRateLimiter > 0)
+                            AddLog("WAN IP changed, updating DNS: " + ret.ToString());
+                        else
+                            AddLog("WAN IP changed (rate limited), updating DNS: " + ret.ToString());
+                    }
+
                     if (Wait(ref tmrRateLimiter, 10 * 60) == true)//every 10 minutes add a "life" to rate limiter counter
                     {
                         if (ipBasedUpdaterRateLimiter < 3)

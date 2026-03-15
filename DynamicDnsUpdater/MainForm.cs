@@ -86,6 +86,15 @@ namespace DynamicDnsUpdater
                             txtbWebrequest.Text = AppSettings.lastWebRequestInfo;
                     });
                 }
+                if (AppSettings.wanIpChanged == true)
+                {
+                    AppSettings.wanIpChanged = false;
+                    Invoke((MethodInvoker)delegate ()
+                    {
+                        if (lblCurrentWanIp != null)
+                            lblCurrentWanIp.Text = AppSettings.currentWanIp;
+                    });
+                }
                 System.Threading.Thread.Sleep(2000);
             }
         }
@@ -539,6 +548,11 @@ namespace DynamicDnsUpdater
 
             string previewUrl = "https://" + txtUpdateLink.Text + "?hostname=" + txtHostname.Text + modifierParam;
             lblStatus.Text = "Preview URL: " + previewUrl;
+        }
+
+        private void chkWanIpChanged_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

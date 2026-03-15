@@ -43,6 +43,8 @@ namespace DynamicDnsUpdater
         public static string settingsFileName = "dduSettings.txt";
         public static string lastWebRequestInfo = ""; //stores datetime + url + result for UI display
         public static bool webRequestInfoChanged = false;
+        public static string currentWanIp = ""; //stores current WAN IP for UI display
+        public static bool wanIpChanged = false;
 
     }
 }

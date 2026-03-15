@@ -67,6 +67,7 @@
             this.lblModifier = new System.Windows.Forms.Label();
             this.txtbModifier = new System.Windows.Forms.TextBox();
             this.chkDebugMode = new System.Windows.Forms.CheckBox();
+            this.chkWanIpChanged = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtbWebrequest = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -77,6 +78,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.trayIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblCurrentWanIp = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -177,7 +180,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(177, 151);
+            this.label1.Location = new System.Drawing.Point(134, 151);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(23, 13);
             this.label1.TabIndex = 0;
@@ -211,7 +214,7 @@
             0,
             0});
             this.numInterval.Name = "numInterval";
-            this.numInterval.Size = new System.Drawing.Size(86, 20);
+            this.numInterval.Size = new System.Drawing.Size(43, 20);
             this.numInterval.TabIndex = 5;
             this.infoTip.SetToolTip(this.numInterval, "How often the program will try to update your dynamic dns record (in minutes)");
             this.numInterval.Value = new decimal(new int[] {
@@ -506,10 +509,27 @@
             this.chkDebugMode.UseVisualStyleBackColor = true;
             this.chkDebugMode.CheckedChanged += new System.EventHandler(this.chkDebugMode_CheckedChanged);
             // 
+            // chkWanIpChanged
+            // 
+            this.chkWanIpChanged.Checked = true;
+            this.chkWanIpChanged.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkWanIpChanged.Enabled = false;
+            this.chkWanIpChanged.Location = new System.Drawing.Point(167, 142);
+            this.chkWanIpChanged.Name = "chkWanIpChanged";
+            this.chkWanIpChanged.Size = new System.Drawing.Size(105, 30);
+            this.chkWanIpChanged.TabIndex = 11;
+            this.chkWanIpChanged.Text = "Update on WanIP change";
+            this.infoTip.SetToolTip(this.chkWanIpChanged, " attempts to detect when wanIP changes");
+            this.chkWanIpChanged.UseVisualStyleBackColor = true;
+            this.chkWanIpChanged.CheckedChanged += new System.EventHandler(this.chkWanIpChanged_CheckedChanged);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.lblCurrentWanIp);
+            this.groupBox1.Controls.Add(this.chkWanIpChanged);
             this.groupBox1.Controls.Add(this.txtbWebrequest);
             this.groupBox1.Controls.Add(this.lblModifier);
             this.groupBox1.Controls.Add(this.txtbModifier);
@@ -530,7 +550,7 @@
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(442, 238);
+            this.groupBox1.Size = new System.Drawing.Size(442, 256);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Main settings";
@@ -540,7 +560,7 @@
             this.txtbWebrequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtbWebrequest.Enabled = false;
-            this.txtbWebrequest.Location = new System.Drawing.Point(9, 179);
+            this.txtbWebrequest.Location = new System.Drawing.Point(9, 197);
             this.txtbWebrequest.Multiline = true;
             this.txtbWebrequest.Name = "txtbWebrequest";
             this.txtbWebrequest.Size = new System.Drawing.Size(427, 46);
@@ -640,6 +660,25 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // lblCurrentWanIp
+            // 
+            this.lblCurrentWanIp.AutoSize = true;
+            this.lblCurrentWanIp.Location = new System.Drawing.Point(85, 176);
+            this.lblCurrentWanIp.Name = "lblCurrentWanIp";
+            this.lblCurrentWanIp.Size = new System.Drawing.Size(10, 13);
+            this.lblCurrentWanIp.TabIndex = 12;
+            this.lblCurrentWanIp.Text = " ";
+            this.infoTip.SetToolTip(this.lblCurrentWanIp, "Current WanIp");
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 176);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(79, 13);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Current WanIp:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -722,6 +761,9 @@
         private System.Windows.Forms.TextBox txtbModifier;
         private System.Windows.Forms.CheckBox chkDebugMode;
         private System.Windows.Forms.TextBox txtbWebrequest;
+        private System.Windows.Forms.CheckBox chkWanIpChanged;
+        private System.Windows.Forms.Label lblCurrentWanIp;
+        private System.Windows.Forms.Label label9;
     }
 }
 
