@@ -68,6 +68,7 @@
             this.txtbModifier = new System.Windows.Forms.TextBox();
             this.chkDebugMode = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtbWebrequest = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -76,7 +77,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.trayIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtbWebrequest = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -187,9 +187,9 @@
             // btnEditOK
             // 
             this.btnEditOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEditOK.Location = new System.Drawing.Point(358, 143);
+            this.btnEditOK.Location = new System.Drawing.Point(384, 143);
             this.btnEditOK.Name = "btnEditOK";
-            this.btnEditOK.Size = new System.Drawing.Size(78, 27);
+            this.btnEditOK.Size = new System.Drawing.Size(52, 27);
             this.btnEditOK.TabIndex = 7;
             this.btnEditOK.Text = "&Edit";
             this.infoTip.SetToolTip(this.btnEditOK, "Saves settings and (re)starts the updater OR stops the updater and edit settings");
@@ -463,7 +463,7 @@
             this.chkUpdateOnLocalIPChange.Checked = true;
             this.chkUpdateOnLocalIPChange.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkUpdateOnLocalIPChange.Enabled = false;
-            this.chkUpdateOnLocalIPChange.Location = new System.Drawing.Point(216, 143);
+            this.chkUpdateOnLocalIPChange.Location = new System.Drawing.Point(278, 140);
             this.chkUpdateOnLocalIPChange.Name = "chkUpdateOnLocalIPChange";
             this.chkUpdateOnLocalIPChange.Size = new System.Drawing.Size(100, 30);
             this.chkUpdateOnLocalIPChange.TabIndex = 6;
@@ -534,6 +534,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Main settings";
+            // 
+            // txtbWebrequest
+            // 
+            this.txtbWebrequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtbWebrequest.Enabled = false;
+            this.txtbWebrequest.Location = new System.Drawing.Point(9, 179);
+            this.txtbWebrequest.Multiline = true;
+            this.txtbWebrequest.Name = "txtbWebrequest";
+            this.txtbWebrequest.Size = new System.Drawing.Size(427, 46);
+            this.txtbWebrequest.TabIndex = 10;
             // 
             // groupBox2
             // 
@@ -628,17 +639,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // txtbWebrequest
-            // 
-            this.txtbWebrequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtbWebrequest.Enabled = false;
-            this.txtbWebrequest.Location = new System.Drawing.Point(9, 179);
-            this.txtbWebrequest.Multiline = true;
-            this.txtbWebrequest.Name = "txtbWebrequest";
-            this.txtbWebrequest.Size = new System.Drawing.Size(427, 46);
-            this.txtbWebrequest.TabIndex = 10;
             // 
             // MainForm
             // 
